@@ -39,7 +39,7 @@ struct FloatingTabBar: View {
     @Binding var selectedTab: Int
 
     var body: some View {
-        HStack(spacing: 0) {
+        HStack(spacing: 4) {
             TabBarButton(
                 icon: "house.fill",
                 title: "Home",
@@ -64,12 +64,12 @@ struct FloatingTabBar: View {
                 selectedTab = 2
             }
         }
-        .frame(height: 60)
-        .padding(.horizontal, 12)
+        .frame(height: 56)
+        .padding(.horizontal, 8)
         .background(
-            RoundedRectangle(cornerRadius: 30)
-                .fill(.regularMaterial)
-                .shadow(color: .black.opacity(0.1), radius: 10, y: 5)
+            RoundedRectangle(cornerRadius: 28)
+                .fill(.ultraThinMaterial)
+                .shadow(color: .black.opacity(0.15), radius: 20, y: 8)
         )
     }
 }
@@ -82,15 +82,15 @@ struct FloatingAddButton: View {
             showingEntryEditor = true
         } label: {
             ZStack {
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(Color.accentColor)
-                    .frame(width: 60, height: 60)
-                    .shadow(color: .black.opacity(0.1), radius: 10, y: 5)
+                RoundedRectangle(cornerRadius: 18)
+                    .fill(.ultraThinMaterial)
+                    .frame(width: 56, height: 56)
+                    .shadow(color: .black.opacity(0.15), radius: 20, y: 8)
 
                 Image(systemName: "plus")
                     .font(.title2)
                     .fontWeight(.semibold)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.primary)
             }
         }
     }
@@ -104,14 +104,16 @@ struct TabBarButton: View {
 
     var body: some View {
         Button(action: action) {
-            VStack(spacing: 4) {
+            VStack(spacing: 3) {
                 Image(systemName: icon)
-                    .font(.system(size: 20))
+                    .font(.system(size: 18))
 
                 Text(title)
-                    .font(.caption2)
+                    .font(.system(size: 10))
             }
             .frame(maxWidth: .infinity)
+            .frame(height: 56)
+            .contentShape(Rectangle())
             .foregroundStyle(isSelected ? Color.accentColor : Color.secondary)
         }
         .buttonStyle(.plain)
