@@ -39,7 +39,7 @@ struct FloatingTabBar: View {
     @Binding var selectedTab: Int
 
     var body: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: 6) {
             TabBarButton(
                 icon: "house.fill",
                 title: "Home",
@@ -64,12 +64,10 @@ struct FloatingTabBar: View {
                 selectedTab = 2
             }
         }
-        .frame(height: 56)
-        .padding(.horizontal, 8)
+        .padding(6)
         .background(
-            RoundedRectangle(cornerRadius: 28)
-                .fill(.ultraThinMaterial)
-                .shadow(color: .black.opacity(0.15), radius: 20, y: 8)
+            Capsule()
+                .fill(.bar)
         )
     }
 }
@@ -81,17 +79,13 @@ struct FloatingAddButton: View {
         Button {
             showingEntryEditor = true
         } label: {
-            ZStack {
-                RoundedRectangle(cornerRadius: 18)
-                    .fill(.ultraThinMaterial)
-                    .frame(width: 56, height: 56)
-                    .shadow(color: .black.opacity(0.15), radius: 20, y: 8)
-
-                Image(systemName: "plus")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.primary)
-            }
+            Image(systemName: "plus")
+                .font(.body.weight(.semibold))
+                .frame(width: 44, height: 44)
+                .background(
+                    Circle()
+                        .fill(.bar)
+                )
         }
     }
 }
@@ -104,15 +98,14 @@ struct TabBarButton: View {
 
     var body: some View {
         Button(action: action) {
-            VStack(spacing: 3) {
+            VStack(spacing: 4) {
                 Image(systemName: icon)
-                    .font(.system(size: 18))
+                    .font(.system(size: 20))
 
                 Text(title)
-                    .font(.system(size: 10))
+                    .font(.caption2)
             }
-            .frame(maxWidth: .infinity)
-            .frame(height: 56)
+            .frame(width: 70, height: 44)
             .contentShape(Rectangle())
             .foregroundStyle(isSelected ? Color.accentColor : Color.secondary)
         }
