@@ -10,51 +10,79 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
+    @Query(filter: #Predicate<JournalEntry> { !$0.isDeleted }, sort: \JournalEntry.createdAt, order: .reverse)
+    private var entries: [JournalEntry]
 
     var body: some View {
-        NavigationSplitView {
+        NavigationStack {
             List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+                ForEach(entries) { entry in
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            Text(entry.mood.emoji)
+                                .font(.title2)
+                            Text(entry.mood.displayName)
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                            Spacer()
+                            Text(entry.createdAt, format: .dateTime.month().day())
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+
+                        if entry.hasText {
+                            Text(entry.previewText)
+                                .font(.body)
+                                .lineLimit(2)
+                        }
+
+                        if let tags = entry.tags, !tags.isEmpty {
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 6) {
+                                    ForEach(tags, id: \.id) { tag in
+                                        Text(tag.name)
+                                            .font(.caption)
+                                            .padding(.horizontal, 8)
+                                            .padding(.vertical, 4)
+                                            .background(Color.secondary.opacity(0.2))
+                                            .cornerRadius(8)
+                                    }
+                                }
+                            }
+                        }
                     }
+                    .padding(.vertical, 4)
                 }
-                .onDelete(perform: deleteItems)
+                .onDelete(perform: deleteEntries)
             }
-#if os(macOS)
-            .navigationSplitViewColumnWidth(min: 180, ideal: 200)
-#endif
+            .navigationTitle("Journal")
             .toolbar {
-#if os(iOS)
                 ToolbarItem(placement: .navigationBarTrailing) {
                     EditButton()
                 }
-#endif
                 ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+                    Button(action: addEntry) {
+                        Label("Add Entry", systemImage: "plus")
                     }
                 }
             }
-        } detail: {
-            Text("Select an item")
         }
     }
 
-    private func addItem() {
+    private func addEntry() {
         withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
+            let newEntry = JournalEntry(
+                content: "Sample entry created at \(Date().formatted(date: .abbreviated, time: .shortened))",
+                mood: .good
+            )
+            modelContext.insert(newEntry)
         }
     }
 
-    private func deleteItems(offsets: IndexSet) {
+    private func deleteEntries(offsets: IndexSet) {
         withAnimation {
             for index in offsets {
-                modelContext.delete(items[index])
+                entries[index].moveToTrash()
             }
         }
     }
@@ -62,5 +90,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
+        .modelContainer(for: JournalEntry.self, inMemory: true)
 }
