@@ -14,17 +14,16 @@ struct MainTabView: View {
                 CalendarView()
                     .tag(1)
 
-                Color.clear
-                    .tag(2)
-
                 StatsView()
-                    .tag(3)
+                    .tag(2)
             }
+            .tabViewStyle(.page(indexDisplayMode: .never))
 
-            FloatingTabBar(
-                selectedTab: $selectedTab,
-                showingEntryEditor: $showingEntryEditor
-            )
+            HStack(spacing: 12) {
+                FloatingTabBar(selectedTab: $selectedTab)
+
+                FloatingAddButton(showingEntryEditor: $showingEntryEditor)
+            }
             .padding(.horizontal, 20)
             .padding(.bottom, 8)
         }
@@ -36,7 +35,6 @@ struct MainTabView: View {
 
 struct FloatingTabBar: View {
     @Binding var selectedTab: Int
-    @Binding var showingEntryEditor: Bool
 
     var body: some View {
         HStack(spacing: 0) {
@@ -56,40 +54,43 @@ struct FloatingTabBar: View {
                 selectedTab = 1
             }
 
-            Button {
-                showingEntryEditor = true
-            } label: {
-                ZStack {
-                    Circle()
-                        .fill(Color.accentColor)
-                        .frame(width: 56, height: 56)
-
-                    Image(systemName: "plus")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(.white)
-                }
-            }
-            .offset(y: -8)
-
             TabBarButton(
                 icon: "chart.bar.fill",
                 title: "Stats",
-                isSelected: selectedTab == 3
+                isSelected: selectedTab == 2
             ) {
-                selectedTab = 3
+                selectedTab = 2
             }
-
-            Spacer()
-                .frame(width: 60)
         }
         .frame(height: 60)
-        .padding(.horizontal, 8)
+        .padding(.horizontal, 12)
         .background(
             RoundedRectangle(cornerRadius: 30)
                 .fill(.regularMaterial)
                 .shadow(color: .black.opacity(0.1), radius: 10, y: 5)
         )
+    }
+}
+
+struct FloatingAddButton: View {
+    @Binding var showingEntryEditor: Bool
+
+    var body: some View {
+        Button {
+            showingEntryEditor = true
+        } label: {
+            ZStack {
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(Color.accentColor)
+                    .frame(width: 60, height: 60)
+                    .shadow(color: .black.opacity(0.1), radius: 10, y: 5)
+
+                Image(systemName: "plus")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.white)
+            }
+        }
     }
 }
 
