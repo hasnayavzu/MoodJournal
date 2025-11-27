@@ -10,14 +10,16 @@ struct MainTabView: View {
             TabView(selection: $selectedTab) {
                 HomeView()
                     .tag(0)
+                    .toolbar(.hidden, for: .tabBar)
 
                 CalendarView()
                     .tag(1)
+                    .toolbar(.hidden, for: .tabBar)
 
                 StatsView()
                     .tag(2)
+                    .toolbar(.hidden, for: .tabBar)
             }
-            .tabViewStyle(.page(indexDisplayMode: .never))
 
             HStack(spacing: 12) {
                 FloatingTabBar(selectedTab: $selectedTab)
