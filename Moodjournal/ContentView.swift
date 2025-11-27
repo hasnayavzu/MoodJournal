@@ -13,6 +13,9 @@ struct ContentView: View {
     @Query(filter: #Predicate<JournalEntry> { !$0.isDeleted }, sort: \JournalEntry.createdAt, order: .reverse)
     private var entries: [JournalEntry]
 
+    @State private var showingEntryEditor = false
+    @State private var entryToEdit: JournalEntry?
+
     var body: some View {
         NavigationStack {
             List {
@@ -52,6 +55,10 @@ struct ContentView: View {
                         }
                     }
                     .padding(.vertical, 4)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        entryToEdit = entry
+                    }
                 }
                 .onDelete(perform: deleteEntries)
             }
@@ -61,21 +68,19 @@ struct ContentView: View {
                     EditButton()
                 }
                 ToolbarItem {
-                    Button(action: addEntry) {
+                    Button {
+                        showingEntryEditor = true
+                    } label: {
                         Label("Add Entry", systemImage: "plus")
                     }
                 }
             }
-        }
-    }
-
-    private func addEntry() {
-        withAnimation {
-            let newEntry = JournalEntry(
-                content: "Sample entry created at \(Date().formatted(date: .abbreviated, time: .shortened))",
-                mood: .good
-            )
-            modelContext.insert(newEntry)
+            .sheet(isPresented: $showingEntryEditor) {
+                EntryEditorView()
+            }
+            .sheet(item: $entryToEdit) { entry in
+                EntryEditorView(entry: entry)
+            }
         }
     }
 
