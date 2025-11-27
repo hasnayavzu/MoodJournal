@@ -1,48 +1,67 @@
 import SwiftUI
 import SwiftData
 
+enum AppTab: Int, CaseIterable {
+    case home
+    case calendar
+    case stats
+    case compose
+
+    var title: String {
+        switch self {
+        case .home: return "Home"
+        case .calendar: return "Calendar"
+        case .stats: return "Stats"
+        case .compose: return ""
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .home: return "house.fill"
+        case .calendar: return "calendar"
+        case .stats: return "chart.bar.fill"
+        case .compose: return "plus"
+        }
+    }
+}
+
 struct MainTabView: View {
-    @State private var selectedTab = 0
+    @State private var selectedTab: AppTab = .home
     @State private var showingEntryEditor = false
 
     var body: some View {
-        TabView(selection: $selectedTab) {
-            HomeView()
-                .tabItem {
-                    Label("Home", systemImage: "house.fill")
+        if #available(iOS 26.0, *) {
+            TabView(selection: $selectedTab) {
+                Tab(AppTab.home.title, systemImage: AppTab.home.icon, value: .home) {
+                    HomeView()
                 }
-                .tag(0)
 
-            CalendarView()
-                .tabItem {
-                    Label("Calendar", systemImage: "calendar")
+                Tab(AppTab.calendar.title, systemImage: AppTab.calendar.icon, value: .calendar) {
+                    CalendarView()
                 }
-                .tag(1)
 
-            StatsView()
-                .tabItem {
-                    Label("Stats", systemImage: "chart.bar.fill")
+                Tab(AppTab.stats.title, systemImage: AppTab.stats.icon, value: .stats) {
+                    StatsView()
                 }
-                .tag(2)
 
-            Color.clear
-                .tabItem {
-                    Image(systemName: "plus.circle.fill")
-                        .environment(\.symbolRenderingMode, .palette)
-                        .foregroundStyle(.white, .blue)
+                Tab(value: .compose, role: .search) {
+                    Color.clear
+                } label: {
+                    Label(AppTab.compose.title, systemImage: AppTab.compose.icon)
                 }
-                .tag(3)
-        }
-        .onChange(of: selectedTab) { oldValue, newValue in
-            if newValue == 3 {
-                showingEntryEditor = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            }
+            .onChange(of: selectedTab) { oldValue, newValue in
+                if newValue == .compose {
+                    withAnimation {
+                        showingEntryEditor = true
+                    }
                     selectedTab = oldValue
                 }
             }
-        }
-        .sheet(isPresented: $showingEntryEditor) {
-            EntryEditorView()
+            .sheet(isPresented: $showingEntryEditor) {
+                EntryEditorView()
+            }
         }
     }
 }
