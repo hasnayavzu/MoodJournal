@@ -9,9 +9,10 @@
 A minimalist iOS journal and mood tracking app that helps users reflect on their daily experiences, track emotional patterns, and build consistent journaling habits.
 
 ### 1.2 Target Platform
-- **Platform:** iOS 17+
+- **Platform:** iOS 26+
 - **Framework:** SwiftUI
 - **Data Persistence:** SwiftData
+- **Design Language:** iOS 26 Native Liquid Glass
 - **Future Support:** Apple Watch (post-MVP)
 
 ### 1.3 Target Audience
@@ -266,9 +267,10 @@ A minimalist iOS journal and mood tracking app that helps users reflect on their
 ## 10. Technical Requirements
 
 ### 10.1 Minimum Requirements
-- iOS 17.0+
+- iOS 26.0+
 - iPhone (optimized for all sizes)
 - iPad support (optional, but should be considered)
+- Native liquid glass UI components
 
 ### 10.2 Technologies
 - **Language:** Swift 5.9+
