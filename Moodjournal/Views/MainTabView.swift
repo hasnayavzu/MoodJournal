@@ -64,11 +64,42 @@ struct FloatingTabBar: View {
                 selectedTab = 2
             }
         }
-        .padding(6)
-        .background(
-            Capsule()
-                .fill(.bar)
-        )
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background {
+            ZStack {
+                Capsule()
+                    .fill(.ultraThinMaterial)
+
+                Capsule()
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color.white.opacity(0.3),
+                                Color.white.opacity(0.1),
+                                Color.clear
+                            ],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+
+                Capsule()
+                    .strokeBorder(
+                        LinearGradient(
+                            colors: [
+                                Color.white.opacity(0.5),
+                                Color.white.opacity(0.2)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        lineWidth: 0.5
+                    )
+            }
+            .shadow(color: .black.opacity(0.1), radius: 20, y: 10)
+            .shadow(color: .black.opacity(0.05), radius: 5, y: 2)
+        }
     }
 }
 
@@ -81,11 +112,41 @@ struct FloatingAddButton: View {
         } label: {
             Image(systemName: "plus")
                 .font(.body.weight(.semibold))
-                .frame(width: 44, height: 44)
-                .background(
-                    Circle()
-                        .fill(.bar)
-                )
+                .frame(width: 48, height: 48)
+                .background {
+                    ZStack {
+                        Circle()
+                            .fill(.ultraThinMaterial)
+
+                        Circle()
+                            .fill(
+                                LinearGradient(
+                                    colors: [
+                                        Color.white.opacity(0.3),
+                                        Color.white.opacity(0.1),
+                                        Color.clear
+                                    ],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
+
+                        Circle()
+                            .strokeBorder(
+                                LinearGradient(
+                                    colors: [
+                                        Color.white.opacity(0.5),
+                                        Color.white.opacity(0.2)
+                                    ],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                ),
+                                lineWidth: 0.5
+                            )
+                    }
+                    .shadow(color: .black.opacity(0.1), radius: 20, y: 10)
+                    .shadow(color: .black.opacity(0.05), radius: 5, y: 2)
+                }
         }
     }
 }
