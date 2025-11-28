@@ -31,24 +31,30 @@ struct EntryEditorView: View {
                         Divider()
 
                         textEditor
+
+                        Divider()
                     }
                     .padding()
                 }
             }
-            .navigationTitle(entryToEdit == nil ? "New Entry" : "Edit Entry")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                    Button {
                         dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .fontWeight(.semibold)
                     }
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
+                    Button {
                         saveEntry()
+                    } label: {
+                        Image(systemName: "checkmark")
+                            .fontWeight(.semibold)
                     }
-                    .fontWeight(.semibold)
                     .disabled(content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
             }
@@ -60,20 +66,17 @@ struct EntryEditorView: View {
             Text("How are you feeling?")
                 .font(.headline)
 
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 16) {
-                    ForEach(Mood.allCases, id: \.self) { mood in
-                        MoodButton(
-                            mood: mood,
-                            isSelected: selectedMood == mood
-                        ) {
-                            withAnimation(.spring(response: 0.3)) {
-                                selectedMood = mood
-                            }
+            HStack(spacing: 8) {
+                ForEach(Mood.allCases, id: \.self) { mood in
+                    MoodButton(
+                        mood: mood,
+                        isSelected: selectedMood == mood
+                    ) {
+                        withAnimation(.spring(response: 0.3)) {
+                            selectedMood = mood
                         }
                     }
                 }
-                .padding(.vertical, 4)
             }
         }
     }
@@ -94,13 +97,6 @@ struct EntryEditorView: View {
                 TextEditor(text: $content)
                     .frame(minHeight: 200)
                     .scrollContentBackground(.hidden)
-            }
-
-            HStack {
-                Text("\(content.split(separator: " ").count) words")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Spacer()
             }
         }
     }
@@ -137,15 +133,16 @@ struct MoodButton: View {
 
     var body: some View {
         Button(action: action) {
-            VStack(spacing: 8) {
+            VStack(spacing: 6) {
                 Text(mood.emoji)
-                    .font(.system(size: 44))
+                    .font(.system(size: 36))
 
                 Text(mood.displayName)
-                    .font(.caption)
+                    .font(.caption2)
                     .fontWeight(isSelected ? .semibold : .regular)
             }
-            .frame(width: 80, height: 100)
+            .frame(maxWidth: .infinity)
+            .frame(height: 90)
             .background(
                 RoundedRectangle(cornerRadius: 16)
                     .fill(isSelected ? mood.color.opacity(0.2) : Color.clear)
