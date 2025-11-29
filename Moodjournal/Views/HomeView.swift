@@ -7,6 +7,7 @@ struct HomeView: View {
     private var entries: [JournalEntry]
 
     @State private var entryToEdit: JournalEntry?
+    @State private var showingSettings = false
 
     var body: some View {
         NavigationStack {
@@ -21,19 +22,24 @@ struct HomeView: View {
                                 entryToEdit = entry
                             }
                     }
-                    .onDelete(perform: deleteEntries)
                 }
             }
             .navigationTitle("Journal")
             .toolbar {
-                if !entries.isEmpty {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        EditButton()
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showingSettings = true
+                    } label: {
+                        Image(systemName: "gearshape")
+                            .fontWeight(.semibold)
                     }
                 }
             }
             .sheet(item: $entryToEdit) { entry in
                 EntryEditorView(entry: entry)
+            }
+            .sheet(isPresented: $showingSettings) {
+                SettingsView()
             }
         }
     }
@@ -58,14 +64,6 @@ struct HomeView: View {
         .listRowSeparator(.hidden)
         .listRowBackground(Color.clear)
         .padding(.top, 100)
-    }
-
-    private func deleteEntries(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                entries[index].moveToTrash()
-            }
-        }
     }
 }
 
