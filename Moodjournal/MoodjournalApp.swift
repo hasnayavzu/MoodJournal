@@ -14,6 +14,7 @@ struct MoodjournalApp: App {
         let schema = Schema([
             JournalEntry.self,
             Tag.self,
+            TagCategory.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

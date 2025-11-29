@@ -7,7 +7,7 @@ struct EntryEditorView: View {
 
     @State private var content: String = ""
     @State private var selectedMood: Mood = .okay
-    @State private var selectedTags: Set<Tag> = []
+    @State private var selectedTagNames: Set<String> = []
 
     @Query private var allTags: [Tag]
 
@@ -25,7 +25,7 @@ struct EntryEditorView: View {
         NavigationStack {
             VStack(spacing: 0) {
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 20) {
+                    VStack(alignment: .leading, spacing: 16) {
                         moodSelector
 
                         Divider()
@@ -33,6 +33,8 @@ struct EntryEditorView: View {
                         textEditor
 
                         Divider()
+
+                        tagSections
                     }
                     .padding()
                 }
@@ -97,6 +99,19 @@ struct EntryEditorView: View {
                 TextEditor(text: $content)
                     .frame(minHeight: 200)
                     .scrollContentBackground(.hidden)
+            }
+        }
+    }
+
+    private var tagSections: some View {
+        VStack(spacing: 12) {
+            ForEach(PredefinedTags.createPredefinedCategories(), id: \.category.name) { item in
+                TagCategorySection(
+                    categoryName: item.category.name,
+                    categoryIcon: item.category.icon,
+                    tags: item.tags,
+                    selectedTags: $selectedTagNames
+                )
             }
         }
     }
